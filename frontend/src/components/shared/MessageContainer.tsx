@@ -19,6 +19,7 @@ export default function MessageContainer({ user }: { user: { name: string, avata
 
 
   useEffect(() => {
+    if (!currentUser?.address) return;
 
     const formattedMessages = usersMessages.map((msg: any) => ({
       message: msg.message,
@@ -26,13 +27,13 @@ export default function MessageContainer({ user }: { user: { name: string, avata
     }));
     setMessages(formattedMessages);
 
-  }, [currentUser.address, usersMessages]);
+  }, [currentUser?.address, usersMessages]);
 
 
   const [newMessage, setNewMessage] = useState('');
 
 
-  const handleMessage = useSendMessage(currentUser.address, newMessage, user.name);
+  const handleMessage = useSendMessage(currentUser?.address || '', newMessage, user.name);
 
 
   const handleSendMessage = async () => {
@@ -50,7 +51,7 @@ export default function MessageContainer({ user }: { user: { name: string, avata
           <div
             className="flex p-3 items-center gap-4 border-b border-stone-500/80 ">
             <div className="rounded-full w-10 h-10 overflow-hidden bg-secondary">
-              <img src={`https://beige-urban-takin-227.mypinata.cloud/ipfs/${user.avatar}`} alt={user.name} className="w-full h-full" />
+              <img src={`https://ipfs.io/ipfs/${user.avatar || ''}`} alt={user.name} className="w-full h-full" />
             </div>
             <h1>{user.name}</h1>
           </div>

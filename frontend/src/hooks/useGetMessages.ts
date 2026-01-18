@@ -8,12 +8,20 @@ const useGetMessages = (from: string, to: string) => {
 
   const [numOfMsgs, setNumOfMsgs] = useState(0);
 
-  console.log(numOfMsgs);
-
   const fetchMessages = useCallback(async () => {
     try {
+      if (!from || !to) {
+        return;
+      }
       const contract = getChatContract(readOnlyProvider);
+      if (!contract || !contract.getMessagesBetweenUsers) {
+        console.error("Contract not initialized properly");
+        return;
+      }
       const res = await contract.getMessagesBetweenUsers(from, to);
+      if (!res) {
+        return;
+      }
       const converted = res.map((item: [string, string, string]) => ({
         from: item[0],
         to: item[1],
@@ -38,19 +46,29 @@ const useGetMessages = (from: string, to: string) => {
       topics: [ethers.id("MessageSent(address,address,string)")],
     };
 
-    wssProvider.getLogs({ ...filter, fromBlock: 5601696 }).then((events) => {
-      setNumOfMsgs(events.length + 1);
-    });
+    let provider: ethers.WebSocketProvider | null = null;
+    
+    try {
+      if (import.meta.env.VITE_WEB_SOCKET_RPC_URL) {
+        provider = new ethers.WebSocketProvider(
+          import.meta.env.VITE_WEB_SOCKET_RPC_URL
+        );
 
-    const provider = new ethers.WebSocketProvider(
-      import.meta.env.VITE_WEB_SOCKET_RPC_URL
-    );
-
-    provider.on(filter, trackingMsgs);
+        provider.on(filter, trackingMsgs);
+      }
+    } catch (err) {
+      console.error("WebSocket provider error:", err);
+    }
 
     return () => {
       // Perform cleanup
-      provider.off(filter, trackingMsgs);
+      if (provider) {
+        try {
+          provider.off(filter, trackingMsgs);
+        } catch (err) {
+          console.error("Error cleaning up provider:", err);
+        }
+      }
     };
   }, [fetchMessages, trackingMsgs]);
 

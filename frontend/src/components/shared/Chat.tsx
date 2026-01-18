@@ -16,7 +16,7 @@ export default function Chat({
       })}>
       {!mine && (
         <div className="w-10 h-10 bg-secondary overflow-hidden rounded-full hidden md:flex">
-          <img src={`https://beige-urban-takin-227.mypinata.cloud/ipfs/${avatar}`} alt="Avatar" className="w-full h-full" />
+          <img src={`https://ipfs.io/ipfs/${avatar || ''}`} alt="Avatar" className="w-full h-full" />
         </div>
       )}
       <div

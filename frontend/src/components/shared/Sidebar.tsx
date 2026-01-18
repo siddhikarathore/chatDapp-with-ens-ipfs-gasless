@@ -12,7 +12,7 @@ export default function Sidebar({ currentUser, listOfUsers }: { currentUser: { n
         currentUser && (
           <div className="flex p-3 items-center gap-4 bg-stone-900  rounded-lg border border-stone-500/80 hover:border-purple-400/60">
             <div className="rounded-full w-10 h-10 overflow-hidden bg-secondary">
-              <img src={`https://beige-urban-takin-227.mypinata.cloud/ipfs/${currentUser.avatar}`} alt={currentUser.name} className="w-full h-full" />
+              <img src={`https://ipfs.io/ipfs/${currentUser?.avatar || ''}`} alt={currentUser?.name || 'User'} className="w-full h-full" />
             </div>
             <h1>{currentUser.name}</h1>
           </div>
@@ -26,7 +26,7 @@ export default function Sidebar({ currentUser, listOfUsers }: { currentUser: { n
             key={index}
             className="flex cursor-pointer p-3 items-center gap-4 bg-stone-900  rounded-lg border border-stone-500/80 hover:border-purple-400/60">
             <div className="rounded-full w-10 h-10 overflow-hidden bg-secondary">
-              <img src={`https://beige-urban-takin-227.mypinata.cloud/ipfs/${user.avatar}`} alt={user.name} className="w-full h-full" />
+              <img src={`https://ipfs.io/ipfs/${user.avatar || ''}`} alt={user.name} className="w-full h-full" />
             </div>
             <h1>{user.name}</h1>
           </Link>
